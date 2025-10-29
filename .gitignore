@@ -1,5 +1,5 @@
 # ===================================================
-# 1. LaTeX Auxiliary Files (Your original list)
+# 1. LaTeX Auxiliary Files
 # ===================================================
 *.aux
 *.bbl
@@ -12,13 +12,7 @@
 *.synctex.gz
 
 # ===================================================
-# 2. Compiled Output
-# ===================================================
-# The final PDF is a build artifact, not source code
-*.pdf
-
-# ===================================================
-# 3. LaTeX Package Caches
+# 2. LaTeX Package Caches
 # ===================================================
 # Cache for 'minted' (code highlighting)
 _minted/
@@ -30,7 +24,7 @@ _minted/
 *.gls
 
 # ===================================================
-# 4. Python & Data Science (for a DS Thesis)
+# 3. Python & Data Science (for a DS Thesis)
 # ===================================================
 # Python cache
 __pycache__/
@@ -50,7 +44,7 @@ venv/
 # figures/generated/
 
 # ===================================================
-# 5. Common OS & Editor Files
+# 4. Common OS & Editor Files
 # ===================================================
 .DS_Store
 Thumbs.db
