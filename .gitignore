@@ -1,0 +1,59 @@
+# ===================================================
+# 1. LaTeX Auxiliary Files (Your original list)
+# ===================================================
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.toc
+*.synctex.gz
+
+# ===================================================
+# 2. Compiled Output
+# ===================================================
+# The final PDF is a build artifact, not source code
+*.pdf
+
+# ===================================================
+# 3. LaTeX Package Caches
+# ===================================================
+# Cache for 'minted' (code highlighting)
+_minted/
+
+# Cache for 'glossaries' package
+*.glo
+*.ist
+*.glg
+*.gls
+
+# ===================================================
+# 4. Python & Data Science (for a DS Thesis)
+# ===================================================
+# Python cache
+__pycache__/
+*.pyc
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Python virtual environments
+*.env
+.venv/
+venv/
+
+# =Additional data/plot folders you might create
+# data/raw/
+# data/processed/
+# figures/generated/
+
+# ===================================================
+# 5. Common OS & Editor Files
+# ===================================================
+.DS_Store
+Thumbs.db
+*~
+*.bak
+.vscode/
