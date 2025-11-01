@@ -18,70 +18,110 @@ Realice una búsqueda y análisis de estándares, normas y reglamentaciones, tan
 
 \newpage
 
-\section{Sistemas de recomendación}
 
-	Esta sección presenta una revisión detallada sobre los sistemas de recomendación, abarcando su historia, tipos y enfoques modernos.
-
-	\subsection{Historia de los sistemas de recomendación}
-	En esta subsección se presenta una breve revisión histórica sobre los sistemas de recomendación, desde sus inicios hasta la actualidad. Se destacan los hitos más importantes y las tecnologías que han impulsado su evolución.
-
-	\subsection{Tipos de sistemas de recomendación}
-	En esta subsección se describen los diferentes tipos de sistemas de recomendación, incluyendo filtrado colaborativo, filtrado basado en contenido y enfoques híbridos. Se discuten las ventajas y desventajas de cada tipo, así como su aplicabilidad en diferentes contextos.
-
-		\subsubsection{Filtrado colaborativo}
-
-		\subsubsection{Filtrado basado en contenido}
-		
-		\subsubsection{Sistemas basados en aprendizaje profundo (DLRS)}
-		
-		\subsubsection{Sistemas basados en dominios cruzados (CDRS)}
-
-\section{El problema de \enquote{cold-start}}
-
-	Esta sección aborda el problema de \enquote{cold-start} en los sistemas de recomendación, que se refiere a la dificultad de hacer recomendaciones precisas para nuevos usuarios o ítems sin historial previo.
-
-\section{Modelos de lenguaje grande (LLM) en sistemas de recomendación}
-
-	Esta sección explora el uso de modelos de lenguaje grande (LLM) en sistemas de recomendación, analizando su potencial para mejorar la calidad de las recomendaciones y abordar desafíos como el problema de \enquote{cold-start}.
-
-Breve conclusión del estado del arte, identificando las brechas en la literatura y justificando la necesidad de la investigación propuesta en la tesis.
-
-% \section{Atributos/features en sistemas de recomendación}
-\newpage
-
-Esto es otra estructura posible:
 
 \section{El problema del \enquote{cold-start} en sistemas de recomendación}
-	Esta sección aborda el problema de \enquote{cold-start} en los sistemas de recomendación, que se refiere a la dificultad de hacer recomendaciones precisas para nuevos usuarios o ítems sin historial previo.
 
 	\subsection{Sistemas de recomendación y sus implementaciones más comunes}
-		En esta subsección se describen los diferentes tipos de sistemas de recomendación, incluyendo filtrado colaborativo, filtrado basado en contenido y enfoques híbridos. Se discute por qué estos enfoques enfrentan desafíos significativos cuando se trata de usuarios o ítems nuevos sin historial previo.
+		Los sistemas de recomendación son herramientas fundamentales en la era digital actual, puesto que permiten personalizar la experiencia del usuario en diversas plataformas. Esto es debido al propósito que tienen estos sistemas, el cual, según Google\footnote{\href{https://developers.google.com/machine-learning/glossary}{Fuente.}} es seleccionar para cada usuario un conjunto relativamente pequeño de elementos deseables de un gran conjunto de posibles opciones. Por otro lado, \cite{L__2012} definen los sistemas de recomendación como sistemas cuya tarea es transformar los datos de los usuarios y sus preferencias en predicciones de sus posibles gustos e intereses futuros. Los casos de uso varian desde recomendaciones de productos en plataformas de comercio electrónico, hasta sugerencias de contenido en servicios de streaming y recomendaciones personalizadas en redes sociales.
+
+		La literatura ha concordado en clasificar los sistemas de recomendación en tres categorías principales: 
+
+		\begin{enumerate}
+			\item Filtrado colaborativo, donde \cite{Koren2015} destacan que en este enfoque se generan recomendaciones de ítems personalizadas para cada usuario, basadas en patrones de calificaciones o uso (por ejemplo, compras, visualizaciones), sin necesidad de información externa sobre los artículos ni los usuarios. Este enfoque se popularizó a través de implementaciones pioneras como el filtrado colaborativo ítem-a-ítem de \cite{10.1145/371920.372071}.
+			\item Filtrado basado en contenido, donde \cite{Aggarwal2016} menciona que este enfoque utiliza las características de los ítems y las preferencias del usuario para generar recomendaciones, analizando atributos como género, autor, director, entre otros. Este método se diferencia del filtrado colaborativo en que no depende de las interacciones entre usuarios.
+			\item Enfoques híbridos, donde \cite{burke2002hybrid} destaca que estos sistemas combinan dos o más técnicas de recomendación (por ejemplo, filtrado colaborativo y basado en contenido) para aprovechar las fortalezas de cada método y mitigar sus debilidades individuales.
+		\end{enumerate}
+
+		Aun cuando estos enfoques han demostrado ser efectivos en diversos contextos, enfrentan desafíos significativos cuando se trata de usuarios o ítems nuevos, lo que se conoce como el problema del \enquote{cold-start} o \enquote{arranque frío} el cual se aborda en la siguiente subsección.
 
 	\subsection{El problema del \enquote{cold-start}}
-		En esta subsección se profundiza en el problema del \enquote{cold-start}, explicando sus causas y consecuencias en los sistemas de recomendación. Se presentan ejemplos de situaciones en las que este problema es particularmente relevante, como en plataformas de comercio electrónico con múltiples unidades de negocio.
+		Consideremos lo siguiente: Sea $U = \left\{ u_{1}, u_{2}, \dots, u_{n} \right\}$ el conjunto de usuarios, donde $u_{i}$ representa a un usuario $i$-ésimo, y sea $I = \left\{ i_{1}, i_{2}, \dots, i_{m} \right\}$ el conjunto de ítems, donde $i_{j}$ representa a un ítem $j$-ésimo. El sistema de recomendación se basa en una matriz de interacciones $R$ de tamaño $n \times m$, donde cada elemento $r_{ij}$ indica la interacción entre el usuario $u_{i}$ y el ítem $i_{j}$ (por ejemplo, una calificación, una compra o una visualización). La matriz $R$ puede representarse de la siguiente manera:
+
+		\begin{equation}
+		R = \begin{bmatrix}
+				r_{11} & r_{12} & r_{13} & \dots & r_{1m} \\
+				r_{21} & r_{22} & r_{23} & \dots & r_{2m} \\
+				r_{31} & r_{32} & r_{33} & \dots & r_{3m} \\
+				\vdots & \vdots & \vdots & \ddots & \vdots \\
+				r_{n1} & r_{n2} & r_{n3} & \dots & r_{nm}
+				\end{bmatrix}
+		\end{equation}
+
+		donde $r_{ij}$ puede tomar valores binarios (1 si hay interacción, 0 si no la hay) o valores continuos (por ejemplo, calificaciones de 1 a 5). Consideremos ahora que un nuevo usuario $u_{new}$ y un nuevo ítem $i_{new}$ se agregan al sistema. Dado que no hay interacciones previas registradas para $u_{new}$ y $i_{new}$, las filas y columnas correspondientes en la matriz $R$ estarán vacías o tendrán valores nulos:
+		\begin{equation}
+		R' = \begin{bmatrix}
+				r_{11} & r_{12} & r_{13} & \dots & r_{1m} & 0 \\
+				r_{21} & r_{22} & r_{23} & \dots & r_{2m} & 0 \\
+				r_{31} & r_{32} & r_{33} & \dots & r_{3m} & 0 \\
+				\vdots & \vdots & \vdots & \ddots & \vdots & \vdots \\
+				r_{n1} & r_{n2} & r_{n3} & \dots & r_{nm} & 0 \\
+				0      & 0      & 0      & \dots & 0      & 0
+				\end{bmatrix}
+		\end{equation}
+
+		En este caso, el sistema de recomendación no puede utilizar la matriz $R'$ para generar recomendaciones para $u_{new}$ o $i_{new}$, ya que no hay datos disponibles para calcular similitudes o patrones de comportamiento. Este problema se conoce como el \enquote{cold-start} o \enquote{arranque frío} y representa un desafío significativo para los sistemas de recomendación tradicionales. \cite{10339320} destacan que el \enquote{cold-start} puede clasificarse en tres categorías principales: \enquote{cold-start} de usuario y \enquote{cold-start} de ítem, donde ambos tipos presentan desafíos únicos que requieren enfoques específicos para su mitigación.
+
+		\cite{SON201687} propone tres enfoques principales para abordar el problema del \enquote{cold-start}: (1) uso de dominios de información adicionales; (2) seleccionar los usuarios más representativos; y (3) augmentar las predicciones mediantes métodos híbridos. Por otro lado, \cite{10339320} clasifican las soluciones en dos grandes grupos: aquellas impulsadas por el método (\textit{approach-driven}), que se centran en mejorar o crear nuevos algoritmos de recomendación, y aquellas impulsadas por los datos (\textit{data-driven}), que buscan mitigar este problema mediante la incorporación de datos adicionales, como regionales, sociales o datos de múltiples dominios o dominios cruzados.
+
+		Es importante destacar que, en ambos casos, se reconoce que la incorporación de datos adicionales puede ser una solución viable para mitigar el problema del \enquote{cold-start}, especialmente en escenarios donde los datos de interacción son limitados o inexistentes. Esta observación motiva la exploración de enfoques basados en dominios cruzados como una solución prometedora para este desafío, la cual se aborda en la siguiente sección.
 
 \section{Cross-Domain Recommender Systems (CDRS) como solución al \enquote{cold-start}}
-	Esta sección explora el enfoque de recomendación de cross-domain (CDRS) como una solución potencial al problema del \enquote{cold-start}. Se discuten las técnicas y metodologías utilizadas en CDRS para transferir conocimiento entre dominios relacionados y mejorar la calidad de las recomendaciones para usuarios o ítems nuevos.
+		Como se mencionó anteriormente, los sistemas de recomendación de dominios cruzados (Cross-Domain Recommender Systems) representan una solución prometedora para mitigar el problema del \enquote{cold-start} al aprovechar el conocimiento del perfil de un usuario en un dominio (unidad de negocio) con datos abundantes para mejorar las recomendaciones en otro dominio donde ese mismo usuario es nuevo y no tiene historial previo.
 
 	\subsection{Definición y conceptos clave de CDRS}
-		En esta subsección se define el concepto de recomendación de cross-domain (CDRS) y se explican los conceptos clave asociados, como la transferencia de conocimiento entre dominios y la creación de perfiles de usuario enriquecidos.
+		Un sistema de recomendación de dominios cruzados (CDRS) se define como un sistema que utiliza información de un dominio \textbf{\textit{fuente}} (donde hay información de las interacciones del usuario) para mejorar las recomendaciones en un dominio \textbf{\textit{objetivo}} (donde el usuario es nuevo o tiene poca información). El objetivo principal de es la transferencia de conocimiento entre dominios para mitigar la falta de datos en el dominio objetivo \cite{10.1145/3548455,6137420}.
+
+		La complejidad de la transferencia de conocimiento depende fundamentalmente de la relación entre los conjuntos de usuario ($\mathcal{U}$) y de ítems ($\mathcal{I}$) en los dominios involucrados. Según \cite{6137420}, existen cuatro escenarios principales basados en la superposición de usuarios e ítems entre los dominios. Antes de describir estos escenarios, definamos dos dominios: el dominio $\mathcal{A}$ y el dominio $\mathcal{B}$, con sus respectivos conjuntos de usuarios $\mathcal{U_{A}}$ y $\mathcal{U_{B}}$, y conjuntos de ítems $\mathcal{I_{A}}$ y $\mathcal{I_{B}}$. La superposición entre estos conjuntos se denota como $\mathcal{U_{AB}} = \mathcal{U_{A}} \cap \mathcal{U_{B}}$ para usuarios e $\mathcal{I_{AB}} = \mathcal{I_{A}} \cap \mathcal{I_{B}}$ para ítems. Los cuatro escenarios son:
+
+		\begin{enumerate}
+			\item \textbf{Sin superposición:} donde no hay usuarios ni ítems comunes entre los dominios, es decir, $\mathcal{U_{AB}} = \emptyset$ y $\mathcal{I_{AB}} = \emptyset$.
+			\item \textbf{Superposición de usuarios:} donde hay usuarios comunes entre los dominios pero no ítems, es decir, $\mathcal{U_{AB}} \neq \emptyset$ y $\mathcal{I_{AB}} = \emptyset$.
+			\item \textbf{Superposición de ítems:} donde hay ítems comunes entre los dominios pero no usuarios, es decir, $\mathcal{U_{AB}} = \emptyset$ y $\mathcal{I_{AB}} \neq \emptyset$.
+			\item \textbf{Superposición completa:} donde hay tanto usuarios como ítems comunes entre los dominios, es decir, $\mathcal{U_{AB}} \neq \emptyset$ y $\mathcal{I_{AB}} \neq \emptyset$.
+		\end{enumerate}
+
+		\cite{10.1145/3548455} extiende estos escenarios al considerar el grado de superposición, clasificándolos en \enquote{parcial} o \enquote{completa}, dependiendo de si la superposición abarca una fracción significativa o la totalidad de los usuarios o ítems entre los dominios.
+
+		El foco principal de la tesis se centrará en el escenario de \textit{superposición parcial de usuarios} ($\mathcal{U_{AB}} \neq \emptyset$ y $\mathcal{I_{AB}} = \emptyset$), ya que representa el contexto de negocio del grupo Falabella, donde un mismo cliente (usuario común) puede tener interacciones en múltiples unidades de negocios (dominios diferentes) con catálogos de productos independientes (sin ítems comunes).
+
+		Además de estos escenarios, los CDRS también se pueden clasificar según su objetivo. Mientras que algunos buscan mejorar el dominio \textbf{\textit{fuente}} (dominio único) o recomendar en múltiples dominios simultáneamente (dominios múltiples), el enfoque relevante para mitigar el \enquote{cold-start} es el de \enquote{dominio cruzado real} \cite{6137420}, donde el objetivo es recomendar ítems de $\mathcal{I_{B}}$ que no existen en $\mathcal{I_{A}}$ a usuarios en $\mathcal{U_{A}}$.
 
 	\subsection{Técnicas y metodologías en CDRS}
-		En esta subsección se describen las técnicas y metodologías utilizadas en CDRS, incluyendo enfoques basados en modelos, enfoques basados en memoria y enfoques híbridos. Se discuten las ventajas y desventajas de cada técnica, así como su aplicabilidad en diferentes contextos.
+		Como se estableció en la sección anterior, el desafío de esta tesis se centra en el escenario de \textit{superposición parcial de usuarios} ($\mathcal{U_{AB}} \neq \emptyset$ y $\mathcal{I_{AB}} = \emptyset$). Este escenario, así como los que no tienen ítems comunes, presentan un desafío bien significativo: la falta de una conexión directa entre los catálogos de productos en los diferentes dominios. Dado que no existe un puente directo entre los ítems, se pueden emplear diversas técnicas para establecer los vínculos necesarios para la transferencia de conocimiento entre dominios. Se pueden agrupar estas técnicas en dos grandes enfoques:
+
+		\begin{itemize}
+			\item \textbf{Transferencia basada en usuarios:} Este enfoque asume que las preferencias latentes de un usuario son consistentes entre dominios. \cite{10.1145/1401890.1401969} proponen un método de factorización matricial colectivo (CMF), donde factoriza las matrices de interacción de múltiples dominios de forma conjunta, compartiendo la matriz de factores latentes de los usuarios comunes. Sin embargo, este enfoque puede ser limitado, ya que no aborda directamente la falta de conexión entre los ítems, es decir, no puede entender por qué un usuario que compra un producto en un dominio podría estar interesado en un producto diferente en otro dominio, solo sabe que el usuario es el mismo.
+
+			\item \textbf{Transferencia basada en ítems:} Este enfoque intenta construir el puente entre los ítems dispares usando sus características (atributos o contenido). Aquí se busca crear un espacio de características compartido entre dominios. Algunos métodos utilizan redes neuronales profundas para mapear las características de los ítems a un espacio vectorial común, por ejemplo, \cite{man2017cross} aprende una función para los \textit{embeddings} de los ítems. De forma similar, \cite{9042271} proponen un método que utiliza las reseñas de productos (un tipo de contenido) para aprender representaciones de ítems que capturan similitudes semánticas entre dominios y mejorar las recomendaciones para usuarios nuevos. No obstante, este enfoque depende en gran medida de la calidad y disponibilidad de las características de los ítems, lo que puede ser un desafío en escenarios del mundo real donde los catálogos de productos son muy diferentes.
+		\end{itemize}
 
 	\subsection{El principal desafío de los CDRS}
-		En esta subsección se aborda el principal desafío de los CDRS, que es la identificación y vinculación de ítems similares entre dominios diferentes. Presentar claramente el \enquote{knowledge gap}.
+		Como lo resume el survey de \cite{10.1145/3548455}, los desafíos fundamentales de los CDRS son \textit{qué transferir} y \textit{cómo transferir}. Estos desafíos son críticos para el éxito de los sistemas de recomendación en escenarios de dominios cruzados, donde la falta de ítems comunes y la variabilidad en las preferencias de los usuarios complican la transferencia de conocimiento. En particular, cuando nos encontramos con dominios heterogéneos (cuando $\mathcal{I_{AB}} = \emptyset$), la literatura carece de un método robusto y escalable para crear el \enquote{puente semántico} que vincule los ítems entre dominios diferentes.
+
+		Este desafío es especialmente relevante en el contexto del grupo Falabella, donde las unidades de negocio operan con catálogos de productos independientes y no existe una taxonomía unificada que permita vincular productos similares entre dominios. La creación manual de estas conexiones no es escalable ni práctica, lo que resalta la necesidad de desarrollar métodos automatizados para generar estas relaciones semánticas.
 
 \section{Modelos de Lenguaje Grande (LLM) en sistemas de recomendación}
-	Esta sección explora el uso de modelos de lenguaje grande (LLM) en sistemas de recomendación, analizando su potencial para mejorar la calidad de las recomendaciones y abordar desafíos como el problema de \enquote{cold-start}.
+	Los Modelos de Lenguaje Grande (LLM) han emergido como herramientas poderosas en el campo del procesamiento del lenguaje natural (NLP) y han demostrado una gran capacidad para comprender y generar texto coherente y contextualmente relevante. Esto los hace particularmente útiles en una variedad de aplicaciones, incluyendo sistemas de recomendación. En esta sección, exploraremos cómo los LLM pueden ser utilizados para mejorar los sistemas de recomendación, especialmente en el contexto de dominios cruzados. \cite{10506571} afirman que los LLM demuestran un gran potencial para revolucionar los sistemas de recomendación. A continuación, se describen tres áreas clave donde los LLM pueden ser aplicados en sistemas de recomendación:
 
 	\subsection{LLM como sistemas de recomendación}
-		En esta subsección se describe cómo los modelos de lenguaje grande (LLM) pueden ser utilizados como sistemas de recomendación, aprovechando su capacidad para comprender y generar texto natural. Se presentan ejemplos de aplicaciones exitosas de LLM en sistemas de recomendación.
+		El primer enfoque consiste en utilizar LLM directamente como sistemas de recomendación. En este paradigma, el historial de interacciones de un usuario y la lista de ítems candidatos se convierten en un \enquote{prompt} texto, el cual se utiliza como entrada para que el modelo razone sobre las preferencias del usuario y genere una lista de recomendaciones. \cite{DBLP:journals/corr/abs-2303-14524} presentan un modelo llamado Chat-REC el cuál utiliza ChatGPT para generar recomendaciones basadas en las preferencias del usuario y el contexto de la conversación. Este enfoque permite una interacción más natural y fluida con los usuarios, mejorando la experiencia de recomendación. Si bien es novedoso, su alto costo computacional y la dificultad de optimizarlos para millones de usuarios los hacen menos prácticos para implementaciones industriales a gran escala en tiempo real.
 
 	\subsection{LLM como extractores de características}
-		En esta subsección se explora el uso de LLM como extractores de características para enriquecer los perfiles de usuario y los ítems en sistemas de recomendación. Se discuten las técnicas utilizadas para extraer características relevantes y su impacto en la calidad de las recomendaciones.
+		El segundo enfoque se centra en utilizar LLM como extractores de características (\textit{feature extractors}) para enriquecer las representaciones de usuarios e ítems en sistemas de recomendación tradicionales. En este caso, los LLM se emplean para analizar descripciones textuales, reseñas de productos u otros datos no estructurados asociados a los ítems y usuarios, generando vectores de características que capturan información semántica relevante. Este enfoque es una evolución de modelos previos como \textbf{BERT4Rec} \cite{10.1145/3357384.3357895} el cuál utiliza la arquitectura Transformer de \textbf{BERT} para codificar la secuencia de interacciones de un usuario en un vector de características de alta calidad. Esto permite que el sistema de recomendación capture patrones complejos en el comportamiento del usuario, mejorando la precisión de las recomendaciones.
+
+		Más recientemente, \cite{DBLP:journals/corr/abs-2404-05961} proponen \textbf{LLM2Vec} un marco que adapta eficientemente LLM generativos para que funcionen como potentes codificadores de texto, capaces de generar vectores de características de alta fidelidad semántica. A diferencia de \textbf{BERT4Rec}, que se centra en secuencias de interacciones, \textbf{LLM2Vec} se especializa en capturar el significado profundo del contenido textual. Esta capacidad de crear representaciones de ítems robustas y semánticamente comparables, basadas únicamente en su información textual, es un precursor prometedor para la tarea de mapear ítems entre dominios heterogéneos, como se discute en la siguiente subsección.
 
 	\subsection{LLM para tareas de \textit{mapeo} y unificación de dominios de información}
-		En esta subsección se analiza cómo los LLM pueden ser utilizados para tareas de \textit{mapeo} y unificación de dominios de información en sistemas de recomendación. Se presentan técnicas para vincular ítems similares entre dominios diferentes, abordando el desafío principal de los CDRS.
+		Por último, los LLM están demostrando una capacidad notable para tareas de \textit{mapeo} y unificación de dominios de información dispares. Esta capacidad es especialmente relevante en el contexto de CDRS, donde la falta de una taxonomía unificada entre dominios representa un desafío significativo. Los LLM pueden ser entrenados o ajustados para identificar similitudes semánticas entre ítems de diferentes dominios, facilitando la creación de vínculos que permitan la transferencia de conocimiento. El \textit{puente} que faltaba entre dominios heterogéneos ahora puede ser construido por estos modelos, principalmente de dos formas:
 
-Breve conclusión del estado del arte, identificando las brechas en la literatura y justificando la necesidad de la investigación propuesta en la tesis.
+		\begin{itemize}
+			\item \textbf{Mapeo de entidades (Entity Matching):} Los LLM pueden ser utilizados para identificar y mapear entidades similares. Modelos basados en Transformers como \textbf{Ditto} \cite{1360021396355430528} han demostrado ser altamente efectivos al transformar el \textit{matching} de productos en un problema de clasificación de secuencias de texto. Más recientemente, los LLM generativos han sido adaptados para esta tarea, donde el modelo puede determinar si dos productos son idénticos o complementarios basándose únicamente en sus descripciones textuales y el \textit{prompt} adecuado \cite{peeters2024entitymatchingusinglarge}.
+			\item \textbf{Generación de taxonomías unificadas:} Más allá de mapear productos uno a uno, los LLM pueden analizar catálogos completos y generar nuevas taxonomías o \enquote{super-categorías} que los unifiquen. Por ejemplo, \cite{10.1145/3219819.3220064} han propuesto métodos para generar taxonomías de forma no supervisada. Esta capacidad permite agrupar productos de diferentes dominios bajo categorías comunes (por ejemplo, agrupar productos de \textit{AUDIO} de Falabella Retail con productos de \textit{CASA INTELIGENTE} de Sodimac en una \enquote{super-categoría} denominada \textit{TECNOLOGÍA Y ELECTRÓNICA}). Esta última capacidad es la que conecta directamente con la oportunidad de investigación planteada en esta tesis, puesto que ofrece una solución escalable y semánticamente robusta al desafío de vincular productos entre unidades de negocio dispares.
+		\end{itemize}
+
+De este modo, el problema del \enquote{cold-start} para usuarios es un desafío persistente en los sistemas de recomendación, siendo una de las causas principales la escasez de datos de interacción \cite{10339320}. Los CDRS emergen como una solución prometedora para mitigar este problema, especialmente en escenarios donde los dominios carecen de ítems comunes \cite{10.1145/3548455}. Sin embargo, su implementación práctica se ve frenada por un desafío fundamental: la heterogeneidad de los dominios de información (unidades de negocio) \cite{9732900}, es decir, la falta de un \enquote{puente semántico} entre catálogos de productos dispares. Como se ha discutido, la literatura identifica que el \textit{gap} principal radica en \textit{qué transferir} y \textit{cómo transferir} entre dominios \cite{10.1145/3548455}.
+
+Aquí es donde los Modelos de Lenguaje Grande (LLM) ofrecen una oportunidad única, ya que su capacidad para comprender y generar texto coherente y contextualmente relevante los posiciona como herramientas ideales para abordar este desafío. Los LLM pueden ser utilizados como recomendadores \cite{DBLP:journals/corr/abs-2303-14524}, como extractores de características \cite{DBLP:journals/corr/abs-2404-05961} y, crucialmente, como herramientas para el mapeo de entidades \cite{1360021396355430528} y la generación de taxonomías \cite{10.1145/3219819.3220064}.
+
+Por lo tanto, la brecha del conocimiento que aborda esta tesis se sitúa en la intersección de estos campos: Si bien existen trabajos que usan LLM para recomendación \cite{10506571} y otros que abordan el mapeo de dominios, el uso específico de un sistema de agentes basado en LLM para generar una taxonomía unificada (\enquote{super-categorías}) que sirva como puente semántico para habilitar CDRS en dominios heterogéneos es un área de investigación activa y no completamente resuelta. Esta tesis busca desarrollar y probar una metodología novedosa para construir dicho puente.
