@@ -1,11 +1,13 @@
 \chapter{Metodología} % Main chapter title
 \label{sec:Metodologia} % For referencing the chapter elsewhere, use
 
-Introducción metodología.
+La presente metodología se estructura en torno a la hipótesis de que la integración de conocimiento semántico externo, a través de Modelos de Lenguaje Grande (LLM), puede mitigar eficazmente el problema del \enquote{cold-start} de usuarios en sistemas de recomendación, en especial cuando se trata de dominios comerciales heterogéneos. A diferencia de los enfoques tradicionales que dependen exclusivamente de la coincidencia exacta de identificadores o de interacciones históricas, esta propuesta busca construir un \enquote{puente semántico} latente entre unidades de negocio dispares (Falabella Retail, Sodimac y Tottus) mediante la creación de \enquote{super-categorías} que unifiquen conceptualmente los catálogos de productos. Este proceso se llevará a cabo mediante un sistema multi-agente basado en LLM, que permitirá generar y validar estas nuevas categorías de manera iterativa y autónoma.
+
+La literatura reciente respalda este cambio de paradigma. \cite{liang2025taxonomy} destacan que el uso de taxonomías guiadas por LLM permiten realizar recomendaciones \enquote{zero-shot} efectivas al estructurar información no organizada, superando las limitaciones de los métodos basados en filtrado colaborativo o contenido puro. Asimismo, investigaciones recientes sobre la capacidad de transferencia de los LLM señalan que estos modelos pueden actuar como razonadores de dominios cruzados, infiriendo preferencias de usuarios en un dominio objetivo basándose en comportamientos de un dominio fuente, incluso sin solapamiento de ítems \cite{liu2025uncovering, krishna2024cross}. A continuación se detalla un esquema general de la metodología propuesta en la Figura \ref{fig:metodologia} y un desglose paso a paso en la Figura \ref{fig:metodologia-pasos}.
 
 \begin{figure}[th]
   \centering
-  \includegraphics[width=\textwidth]{Figures/Resumen-grafico.png}
+  \includegraphics[width=0.8\textwidth]{Figures/Resumen-grafico.png}
   \caption{Esquema general de la metodología propuesta.}
   \label{fig:metodologia}
 \end{figure}
@@ -17,8 +19,6 @@ Introducción metodología.
   \label{fig:metodologia-pasos}
   
 \end{figure}
-
-Explicación paso a paso metodología.
 
 \begin{enumerate}
   \item \textbf{Recopilación y procesamiento de los datos:} Obtener y estandarizar los catálogos de productos e historiales de interacción de las unidades de negocio del grupo Falabella (Falabella Retail, Tottus y Sodimac) para crear un dataset unificado.
@@ -43,7 +43,7 @@ Explicación paso a paso metodología.
   En esta etapa, se implementará un sistema multi-agente basado en Modelos de Lenguaje Grande (LLM) para la generación y validación de \enquote{super-categorías} a partir de las categorías originales de los catálogos de productos. Este sistema estará compuesto por tres agentes, cada uno con una función específica en el proceso de generación de \enquote{super-categorías}, los cuales se describen a continuación:
 
   \subsection{El agente generador}
-    Este agente constitye el punto de partida y el principal actor del sistema multi-agente. Su función principal es identificar y agrupar categorías similares entre las distintas unidades de negocio, cuyos grupos serán etiquetados con una nueva \enquote{super-categoría} que mejor represente el conjunto. Para ello, este agente utiliza la capacidad de razonamiento de un LLM para identificar equivalencias conceptuales entre etiquetas dispares (por ejemplo, asociar \enquote{Cunas} de una unidad de negocio con \enquote{Ropa de bebé} de otra). Este proceso se realizará iterativamente por cada nivel de la jerarquía de categorías, comenzando desde el nivel más general hasta llegar al nivel más específico.
+    Este agente constituye el punto de partida y el principal actor del sistema multi-agente. Su función principal es identificar y agrupar categorías similares entre las distintas unidades de negocio, cuyos grupos serán etiquetados con una nueva \enquote{super-categoría} que mejor represente el conjunto. Para ello, este agente utiliza la capacidad de razonamiento de un LLM para identificar equivalencias conceptuales entre etiquetas dispares (por ejemplo, asociar \enquote{Cunas} de una unidad de negocio con \enquote{Ropa de bebé} de otra). Este proceso se realizará iterativamente por cada nivel de la jerarquía de categorías, comenzando desde el nivel más general hasta llegar al nivel más específico.
 
     Luego de generar una propuesta inicial de \enquote{super-categorías}, el agente empaqueta cada grupo de categorías hijas junto con su etiqueta propuesta en un formato estructurado (por ejemplo, JSON) y lo envía al Agente Validador para su evaluación.
 
@@ -54,7 +54,7 @@ Explicación paso a paso metodología.
     \begin{itemize}
       \item \textbf{Homogeneidad:} Verifica que todas las sub-categorías agrupadas compartan una relación semántica lógica.
       \item \textbf{Representatividad:} Asegura que la etiqueta de la super-categoría describa fielmente al conjunto sin ser excesivamente genérica ni restrictiva.
-      \item \textbf{Detección de Alucinaciones:} Identifica agrupaciones erroneas o etiquetas inventadas que no corresponden a la taxonomía comercial real.
+      \item \textbf{Detección de Alucinaciones:} Identifica agrupaciones erróneas o etiquetas inventadas que no corresponden a la taxonomía comercial real.
     \end{itemize}
    
    El resultado de esta etapa es un veredicto binario (Aprobado/Rechazado) acompañado de una justificación estructurada. En caso de rechazo, este reporte de error se envía al Agente Retroalimentador, quien será el encargado de interpretar las fallas e instruir al Generador en la siguiente iteración.
