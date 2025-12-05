@@ -60,7 +60,7 @@ La literatura reciente respalda este cambio de paradigma. \cite{liang2025taxonom
    El resultado de esta etapa es un veredicto binario (Aprobado/Rechazado) acompañado de una justificación estructurada. En caso de rechazo, este reporte de error se envía al Agente Retroalimentador, quien será el encargado de interpretar las fallas e instruir al Generador en la siguiente iteración.
 
   \subsection{El agente retroalimentador}
-    La función principal este agente se activa únicamente cuando el agente validador rechaza una propuesta. El agente retroalimentador recibe el reporte de error o inconsistencia generado por el validador y lo procesa para construir un nuevo \textit{prompt} o conjunto de instrucciones refinadas.
+    La función principal de este agente se activa únicamente cuando el agente validador rechaza una propuesta. El agente retroalimentador recibe el reporte de error o inconsistencia generado por el validador y lo procesa para construir un nuevo \textit{prompt} o conjunto de instrucciones refinadas.
 
     A diferencia de un simple reintento, este agente contextualiza el error (por ejemplo, si la \enquote{super-categoría} fue muy genérica o semánticamente incorrecta) y guía al agente generador para que su siguiente iteración sea más precisa. Este ciclo de retroalimentación se repite hasta que la propuesta cumple con los estándares de validación o hasta alcanzar un número máximo de iteraciones, garantizando así que las \enquote{super-categorías} resultantes no solo sean válidas, sino que estén optimizadas semánticamente para la tarea de unificación de dominios.
 
