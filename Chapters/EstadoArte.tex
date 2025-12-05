@@ -19,7 +19,7 @@
 		Aun cuando estos enfoques han demostrado ser efectivos en diversos contextos, enfrentan desafíos significativos cuando se trata de usuarios o ítems nuevos, lo que se conoce como el problema del \enquote{cold-start} o \enquote{arranque frío} el cual se aborda en la siguiente subsección.
 
 	\subsection{El problema del \enquote{cold-start}}
-		Consideremos lo siguiente: Sea $U = \left\{ u_{1}, u_{2}, \dots, u_{n} \right\}$ el conjunto de usuarios, donde $u_{i}$ representa a un usuario $i$-ésimo, y sea $I = \left\{ i_{1}, i_{2}, \dots, i_{m} \right\}$ el conjunto de ítems, donde $i_{j}$ representa a un ítem $j$-ésimo. El sistema de recomendación se basa en una matriz de interacciones $R$ de tamaño $n \times m$, donde cada elemento $r_{ij}$ indica la interacción entre el usuario $u_{i}$ y el ítem $i_{j}$ (por ejemplo, una calificación, una compra o una visualización). La matriz $R$ puede representarse de la siguiente manera:
+		Consideremos lo siguiente: Sea $U = \left\{ u_{1}, u_{2}, \dots, u_{n} \right\}$ el conjunto de usuarios, donde $u_{i}$ representa a un usuario $i$-ésimo, y sea $I = \left\{ i_{1}, i_{2}, \dots, i_{m} \right\}$ el conjunto de ítems, donde $i_{j}$ representa a un ítem $j$-ésimo. El sistema de recomendación se basa en una matriz de interacciones $R$ de tamaño $n \times m$, donde cada elemento $r_{ij}$ indica la interacción entre el usuario $u_{i}$ y el ítem $i_{j}$ (por ejemplo, una calificación, una compra o una visualización). En la Ecuación \ref{eq:original_interaction_matrix}, se muestra como se vería esta matriz $R$:
 
 		\begin{equation}
 		R = \begin{bmatrix}
@@ -29,9 +29,10 @@
 				\vdots & \vdots & \vdots & \ddots & \vdots \\
 				r_{n1} & r_{n2} & r_{n3} & \dots & r_{nm}
 				\end{bmatrix}
+		\label{eq:original_interaction_matrix}
 		\end{equation}
 
-		donde $r_{ij}$ puede tomar valores binarios (1 si hay interacción, 0 si no la hay) o valores continuos (por ejemplo, calificaciones de 1 a 5). Consideremos ahora que un nuevo usuario $u_{new}$ y un nuevo ítem $i_{new}$ se agregan al sistema. Dado que no hay interacciones previas registradas para $u_{new}$ y $i_{new}$, las filas y columnas correspondientes en la matriz $R$ estarán vacías o tendrán valores nulos:
+		donde $r_{ij}$ puede tomar valores binarios (1 si hay interacción, 0 si no la hay) o valores continuos (por ejemplo, calificaciones de 1 a 5). Consideremos ahora que un nuevo usuario $u_{new}$ y un nuevo ítem $i_{new}$ se agregan al sistema. Dado que no hay interacciones previas registradas para $u_{new}$ y $i_{new}$, las filas y columnas correspondientes en la matriz $R$ estarán vacías o tendrán valores nulos, como se muestra en la Ecuación \ref{eq:cold_start_interaction_matrix}:
 		\begin{equation}
 		R' = \begin{bmatrix}
 				r_{11} & r_{12} & r_{13} & \dots & r_{1m} & 0 \\
@@ -41,6 +42,7 @@
 				r_{n1} & r_{n2} & r_{n3} & \dots & r_{nm} & 0 \\
 				0      & 0      & 0      & \dots & 0      & 0
 				\end{bmatrix}
+		\label{eq:cold_start_interaction_matrix}
 		\end{equation}
 
 		En este caso, el sistema de recomendación no puede utilizar la matriz $R'$ para generar recomendaciones para $u_{new}$ o $i_{new}$, ya que no hay datos disponibles para calcular similitudes o patrones de comportamiento. Este problema se conoce como el \enquote{cold-start} o \enquote{arranque frío} y representa un desafío significativo para los sistemas de recomendación tradicionales. \cite{10339320} destacan que el \enquote{cold-start} puede clasificarse en tres categorías principales: \enquote{cold-start} de usuario y \enquote{cold-start} de ítem, donde ambos tipos presentan desafíos únicos que requieren enfoques específicos para su mitigación.
