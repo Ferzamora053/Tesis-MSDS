@@ -1,4 +1,96 @@
 \chapter{Metodología} % Main chapter title
 \label{sec:Metodologia} % For referencing the chapter elsewhere, use
 
-Describa la metodología utilizada o por utilizar durante su proyecto, sustente debidamente, con un análisis bibliográfico de las metodologías disponibles, la elección de esta metodología por sobre otras. La idea de una metodologia, es que alguien pueda leerla y pueda replicar su trabajo, obteniendo los mismos resultados. 
+Introducción metodología.
+
+\begin{figure}[th]
+  \centering
+  \includegraphics[width=\textwidth]{Figures/Resumen-grafico.png}
+  \caption{Esquema general de la metodología propuesta.}
+  \label{fig:metodologia}
+\end{figure}
+
+\begin{figure}[th]
+  \centering
+  \includegraphics[width=\textwidth]{Figures/metodologia-revisada.pdf}
+  \caption{Esquema paso a paso de la metodología propuesta.}
+  \label{fig:metodologia-pasos}
+  
+\end{figure}
+
+Explicación paso a paso metodología.
+
+\begin{enumerate}
+  \item \textbf{Recopilación y procesamiento de los datos:} Obtener y estandarizar los catálogos de productos e historiales de interacción de las unidades de negocio del grupo Falabella (Falabella Retail, Tottus y Sodimac) para crear un dataset unificado.
+  \item \textbf{Generación de \enquote{super-categorías}:} Implementar un sistema multi-agente basado en LLM para crear y validar \enquote{super-categorías} a partir de las categorías originales de los catálogos de productos.
+  \item \textbf{Creación del dataset extendido:} Incorporar las \enquote{super-categorías} generadas como características latentes adicionales en los datasets de entrenamiento del sistema de recomendación.
+  \item \textbf{Entrenamiento y fine-tuning del sistema de recomendación:} Ajustar el modelo de recomendación utilizando el dataset extendido.
+  \item \textbf{Evaluación del rendimiento del sistema de recomendación:} Medir la precisión, recall y otras métricas relevantes para evaluar la efectividad del sistema en comparación con el sistema actual.
+  \item \textbf{Consolidación de los resultados:} Analizar y documentar los hallazgos obtenidos durante la evaluación para futuras mejoras.
+\end{enumerate}
+
+
+\section{Recopilación de datos del grupo Falabella}
+
+  La primera etapa de la metodología propuesta consiste en la recopilación y preprocesamiento de los datos provenientes de las distintas unidades de negocio del grupo Falabella. Esto incluye la obtención de los catálogos de productos y los historiales de interacción de los usuarios con dichos productos. Estos datos serán estandarizados para crear un dataset unificado que servirá como base para las etapas posteriores.
+
+  En particular, se extraer los catálogos de productos de las tablas de maestro de productos de cada unidad de negocio, asegurando de obtener todos los atributos pertenecientes a cada producto, como su categoría, descripción, precio, entre otros. Luego, para obtener los historiales de interacción, se cruzarán las tablas de transacciones de los usuarios con los catálogos de productos, generando un dataset que refleje las interacciones de los usuarios con los productos disponibles en cada unidad de negocio. Este dataset unificado permitirá analizar las similitudes y diferencias entre las categorías de productos de las distintas unidades de negocio, facilitando la generación de \enquote{super-categorías} en la siguiente etapa.
+
+  En esta etapa, también se llevará a cabo un proceso de limpieza y normalización de los datos para garantizar su calidad y consistencia. Esto incluirá la eliminación de duplicados, el manejo de valores faltantes y una mejor comprensión sobre la estructura de los datos disponibles.
+
+\section{Generación de \enquote{super-categorías}}
+
+  En esta etapa, se implementará un sistema multi-agente basado en Modelos de Lenguaje Grande (LLM) para la generación y validación de \enquote{super-categorías} a partir de las categorías originales de los catálogos de productos. Este sistema estará compuesto por tres agentes, cada uno con una función específica en el proceso de generación de \enquote{super-categorías}, los cuales se describen a continuación:
+
+  \subsection{El agente generador}
+    Este agente constitye el punto de partida y el principal actor del sistema multi-agente. Su función principal es identificar y agrupar categorías similares entre las distintas unidades de negocio, cuyos grupos serán etiquetados con una nueva \enquote{super-categoría} que mejor represente el conjunto. Para ello, este agente utiliza la capacidad de razonamiento de un LLM para identificar equivalencias conceptuales entre etiquetas dispares (por ejemplo, asociar \enquote{Cunas} de una unidad de negocio con \enquote{Ropa de bebé} de otra). Este proceso se realizará iterativamente por cada nivel de la jerarquía de categorías, comenzando desde el nivel más general hasta llegar al nivel más específico.
+
+    Luego de generar una propuesta inicial de \enquote{super-categorías}, el agente empaqueta cada grupo de categorías hijas junto con su etiqueta propuesta en un formato estructurado (por ejemplo, JSON) y lo envía al Agente Validador para su evaluación.
+
+  \subsection{El agente validador}
+    Este agente opera como un filtro de calidad crítico dentro del flujo de trabajo. Su función principal es evaluar la coherencia semántica y la precisión de las \enquote{super-categorías} propuestas por el Agente Generador, sin intervenir en la creación de nuevas etiquetas.
+
+    Utilizando una instancia de LLM configurada con instrucciones de auditoría estricta, el agente analiza cada par \textit{(super-categoría, categorías hijas)} bajo criterios predefinidos de:
+    \begin{itemize}
+      \item \textbf{Homogeneidad:} Verifica que todas las sub-categorías agrupadas compartan una relación semántica lógica.
+      \item \textbf{Representatividad:} Asegura que la etiqueta de la super-categoría describa fielmente al conjunto sin ser excesivamente genérica ni restrictiva.
+      \item \textbf{Detección de Alucinaciones:} Identifica agrupaciones erroneas o etiquetas inventadas que no corresponden a la taxonomía comercial real.
+    \end{itemize}
+   
+   El resultado de esta etapa es un veredicto binario (Aprobado/Rechazado) acompañado de una justificación estructurada. En caso de rechazo, este reporte de error se envía al Agente Retroalimentador, quien será el encargado de interpretar las fallas e instruir al Generador en la siguiente iteración.
+
+  \subsection{El agente retroalimentador}
+    La función principal este agente se activa únicamente cuando el agente validador rechaza una propuesta. El agente retroalimentador recibe el reporte de error o inconsistencia generado por el validador y lo procesa para construir un nuevo \textit{prompt} o conjunto de instrucciones refinadas.
+
+    A diferencia de un simple reintento, este agente contextualiza el error (por ejemplo, si la \enquote{super-categoría} fue muy genérica o semánticamente incorrecta) y guía al agente generador para que su siguiente iteración sea más precisa. Este ciclo de retroalimentación se repite hasta que la propuesta cumple con los estándares de validación o hasta alcanzar un número máximo de iteraciones, garantizando así que las \enquote{super-categorías} resultantes no solo sean válidas, sino que estén optimizadas semánticamente para la tarea de unificación de dominios.
+
+\section{Creación del dataset extendido}
+
+  Una vez obtenidas y validadas las \enquote{super-categorías}, la tercera etapa se centra en la integración de esta nueva información en los datos de entrenamiento para el sistema de recomendación. El objetivo es enriquecer la representación de los ítems y usuarios mediante la incorporación de estas características latentes.
+
+  Para lograr esto, se transformará la salida estructurada del sistema multi-agente (por ejemplo, en formato JSON) en un formato tabular compatible con los datasets de entrenamiento del sistema de recomendación, con el fin de permitir el cruzamiento de la tabla de \enquote{super-categorías} con las tablas de productos e historiales de interacción. Esto implicará la creación de nuevas columnas en las tablas de productos que reflejen las \enquote{super-categorías} asignadas a cada producto.
+
+\section{Entrenamiento y fine-tuning del sistema de recomendación}
+
+  Con el dataset unificado y enriquecido, se procederá a la fase de modelado. En esta etapa se seleccionará y entrenará el algoritmo de recomendación (por ejemplo, BigQuery ML) capaz de manejar características de dominios cruzados.
+
+  El proceso de entrenamiento se dividirá en dos sub-etapas clave:
+  \begin{itemize}
+    \item \textbf{Entrenamiento inicial:} Se entrenará el modelo de recomendación utilizando el dataset extendido que incluye las \enquote{super-categorías}, permitiendo al modelo aprender patrones de interacción entre usuarios y productos a través de los dominios comerciales.
+    \item \textbf{Fine-tuning:} Posteriormente, se realizará un ajuste fino del modelo para optimizar su rendimiento específicamente en escenarios de \enquote{cold-start} de usuario. Esto implicará la evaluación continua del modelo durante el entrenamiento, ajustando hiperparámetros y técnicas de regularización para maximizar la capacidad del sistema para generar recomendaciones precisas incluso cuando la información del usuario es limitada.
+  \end{itemize}
+
+\section{Evaluación del rendimiento del sistema de recomendación}
+
+  Para validar la hipótesis de investigación, se llevará a cabo una evaluación cuantitativa rigurosa comparando el desempeño del nuevo modelo frente al sistema base (sin \enquote{super-categorías}).
+
+  La estrategia de evaluación consistirá en dividir el dataset en conjuntos de entrenamiento y prueba, aislando específicamente a usuarios que simulen una situación de \textit{cold-start} en el dominio objetivo. Se utilizarán métricas de ranking estándar en la industria, tales como:
+  \begin{itemize}
+    \item \textbf{NDCG@K (Normalized Discounted Cumulative Gain):} Para evaluar la calidad del ordenamiento de las recomendaciones.
+    \item \textbf{Recall@K:} Para medir la capacidad del sistema de recuperar ítems relevantes dentro de las primeras $K$ sugerencias.
+  \end{itemize}
+  El éxito de la metodología se determinará en función de la mejora porcentual (\textit{lift}) obtenida en estas métricas respecto al baseline.
+
+\section{Consolidación de los resultados}
+
+  Finalmente, la última etapa consiste en la recopilación, análisis y documentación de los hallazgos obtenidos durante la fase experimental. Se generarán reportes que no solo muestren las métricas de rendimiento, sino que también analicen cualitativamente la calidad de las \enquote{super-categorías} generadas por los agentes LLM. Esta consolidación permitirá identificar las fortalezas de la metodología propuesta, así como las limitaciones y áreas de oportunidad para futuras líneas de investigación en sistemas de recomendación \textit{cross-domain}.

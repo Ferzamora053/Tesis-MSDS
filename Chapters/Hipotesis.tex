@@ -1,4 +1,21 @@
 \chapter{Hipótesis y objetivos} % Main chapter title
 \label{sec:Hipotesis} % For referencing the chapter elsewhere, use
 
-La tesis deberá tener hipótesis y/o objetivos (general y específicos). Discutir con su profesor guía para más detalles.
+\begin{quote}
+  \textit{El uso de Modelos de Lenguaje Grande (LLM) para generar \enquote{super-categorías} unifica semánticamente los catálogos de productos de distintas unidades de negocio, mejorando el rendimiento de los sistemas de recomendación en escenarios de \enquote{cold-start} de usuario.}
+\end{quote}
+
+Esta investigación busca explorar la capacidad de los Modelos de Lenguaje Grande (LLM) para mitigar el problema del \enquote{cold-start} en sistemas de recomendación mediante la creación de una taxonomía unificada que agrupe categorías similares de productos entre diferentes dominios comerciales. Esto permitiría al sistema de recomendación transferir conocimiento entre unidades de negocio, mejorando la calidad de las recomendaciones para usuarios en situación de \enquote{cold-start}.
+
+\section{Objetivos}
+
+  \subsection{Objetivo General}
+  Desarrollar y validar una metodología para la mitigación del problema del «cold-start» en sistemas de recomendación mediante la unificación semántica de dominios comerciales heterogéneos, utilizando un sistema multi-agente basado en Modelos de Lenguaje Grande (LLM) para la generación de taxonomías transversales («super-categorías»).
+
+  \subsection{Objetivos Específicos}
+  \begin{enumerate}
+    \item Recopilar y preprocesar los catálogos de productos y los historiales de interacción de las unidades de negocio del grupo Falabella (Falabella Retail, Tottus y Sodimac) para crear un dataset estandarizado.
+    \item Diseñar e implementar un sistema multi-agente basado en LLM que genere y valide \enquote{super-categorías} a partir de las categorías originales de los catálogos de productos.
+    \item Integrar las \enquote{super-categorías} generadas como características latentes adicionales a los datasets de entrenamiento de un sistema de recomendación.
+    \item Evaluar el impacto de la inclusión de \enquote{super-categorías} en el rendimiento del sistema de recomendación, especialmente en escenarios de \enquote{cold-start} de usuario, mediante métricas cuantitativas como NDCG y Recall.
+  \end{enumerate}

@@ -2,17 +2,6 @@
 \chapter{Definición del problema u oportunidad} % Main chapter title
 \label{sec:problema} % For referencing the chapter elsewhere, use
 
-Este capítulo debe contener la exposición general del problema. Con respecto al problema se debe responder las siguientes preguntas:
-\begin{itemize}
-	\item	¿Cuál es el problema u oportunidad abordado por el proyecto? ¿Es posible cuantificarlo?
-	\item	¿Cuáles son las causas de la existencia de este problema u oportunidad? Haga referencia a publicaciones y/u otros antecedentes que validen estas causas.
-	\item Explique cómo la memoria ayudará a abordar este problema.
-	
-\end{itemize}
-
-% Citas a libro \cite{ejemploLibro} o paper~\cite{ejemploPaper}. Usted puede agregar otros tipos como journal o techincal report
-\newpage
-
 Falabella Tecnología Corporativa (FTC) posee actualmente un sistema de recomendación basado en Filtrado Colaborativo Implícito (Factorización de Matrices) desarrollado en BigQuery ML (BQML). Este sistema presenta limitaciones significativas para el negocio: su simplicidad dificulta abordar la complejidad del comportamiento del cliente, ofrece un bajo nivel de personalización y, crucialmente, utiliza únicamente el identificador del cliente como dato de entrada. Esta implementación desaprovecha una gran cantidad de datos relevantes, como características demográficas, comportamientos históricos y segmentaciones internas, restringiendo la capacidad del sistema para generar recomendaciones que maximicen la efectividad de las campañas de marketing.
 
 La principal oportunidad de mejora, identificada en conjunto con FTC, radica en mitigar el problema del \enquote{cold-start} o \enquote{arranque en frío}. Este problema afecta a clientes nuevos de una determinada unidad de negocio; es decir, aquellos que no cuentan con un historial previo de interacciones en dicha unidad, pero que sí poseen datos relevantes en las demás unidades de negocio del grupo Falabella. De este modo, el proyecto aborda la oportunidad de desarrollar un sistema de recomendación basado en dominios cruzados (Cross Domain Recommender Systems - CDRS) que utilice y conecte los datos de las diferentes unidades de negocio del grupo.
